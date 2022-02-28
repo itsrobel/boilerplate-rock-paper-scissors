@@ -2,8 +2,6 @@
 
 import random
 
-from numpy import percentile
-
 
 def play(player1, player2, num_games, verbose=False):
     p1_prev_play = ""
@@ -100,14 +98,13 @@ def abbey(prev_opponent_play,
         prev_opponent_play + "P",
         prev_opponent_play + "S",
     ]
-    # print(potential_plays)
+
     sub_order = {
         k: play_order[0][k]
         for k in potential_plays if k in play_order[0]
     }
 
     prediction = max(sub_order, key=sub_order.get)[-1:]
-    # print(prediction)
 
     ideal_response = {'P': 'S', 'R': 'P', 'S': 'R'}
     return ideal_response[prediction]
