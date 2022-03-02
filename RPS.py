@@ -6,24 +6,29 @@ from RPS_game import abbey
 from itertools import permutations
 from itertools import product
 import operator
-# The example function below keeps track of the opponent's history and plays whatever the opponent played two plays ago. It is not a very good player so you will need to change the code to pass the challenge.
+  # The example 
+
+# unction below keeps track of the opponent's history and plays whatever the opponent played two plays ago. It is not a very good player so you will need to change the code to pass the challenge.
 rps_index = {"R": "P", "P": "S", "S": "R"}
 
 
 def player(prev_play, opponent_history=[]):
-    dict_rps= get_perm("RPS", 3)
-    df_play=pd.DataFrame.from_dict(dict_rps,  orient='index',  columns=['value'])
-    df_play.index.name = "key"
+    list_rps = (get_perm("RPS", 3))
+    df_play = pd.DataFrame(list_rps, columns=["play", "value"])
+    # print(df_play)
 
 
-    if not prev_play:
-        prev_play = 'R'
+    # if not prev_play:
+    #     prev_play = 'R'
     
     opponent_history.append(prev_play)
-    # print(df_play.index.name)
+    # # print(df_play.index.name)
     opponent_hist_str = "".join(opponent_history)
 
-    find_and_sort(df_play, opponent_hist_str)
+    df_new = find_and_sort(df_play, opponent_hist_str)
+    # df_new = find_and_sort(df_play, opponent_hist_str)
+    # select_rank(df_new, opponent_history)
+    # print(df_new)
     # print(df_play.sort_values(by="value",ascending=False))
     # print(df_play)
     # df_play[]
@@ -33,20 +38,34 @@ def player(prev_play, opponent_history=[]):
     # print(max(df_play, key=operator.itemgetter(1)))
     return abbey(prev_opponent_play=prev_play)
 
+
 def get_perm(str1, rno):
   chars = list(str1)
-  results = {}
+  results = []
   for c in product(chars, repeat = rno):
-    results["".join(list(c))] = 0
+    results.append(["".join(list(c)) , 0])
   return results
 
-def find_and_sort(df, string):
-    for index, row in df.iterrows():
-        # print(index)
-        # print(string.count(index))
-        # print(row['value'])
-        row['value'] = string.count(index)
 
+def find_and_sort(df, string):
+
+#Syntax of DataFrame.apply()
+
+# Another alternate approach by using DataFrame.apply()
+    # print(df.apply(lambda row :func(row['value']  = string.count(row['play'])), axis = 1))
+    def count(play, value):
+      value = string.count(play)
+      return value
+    df['value'] = df.apply(lambda row: count(row['play'], row['value']),axis=1)
     df = (df.sort_values(by="value",ascending=False))
 
     return df
+
+def select_rank(df , hist):
+  hist = "".join(hist[-2:])
+  # matchs = df["key"]
+  # print(matchs)
+  print(df['value'])
+  # print(hist)
+
+  
